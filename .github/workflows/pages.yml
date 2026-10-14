@@ -24,7 +24,7 @@ jobs:
       - name: Descargar el proyecto
         uses: actions/checkout@v6
       - name: Ejecutar pruebas
-        run: node --test tests/api.test.js
+        run: node --test tests/*.test.js
       - name: Configurar Pages
         uses: actions/configure-pages@v5
       - name: Preparar la página

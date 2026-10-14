@@ -1,4 +1,5 @@
 import { requestJSON, describe, validateWeather } from './api.js';
+import { exactCountry, isCountry, placeLabel } from './places.js';
 const $ = id => document.getElementById(id);
 let busy = false;
 function status(message, error = false) { $('status').textContent = message; $('status').className = error ? 'error' : ''; }
@@ -17,24 +18,27 @@ $('search').addEventListener('submit', event => {
   if (name.length < 2) { status('Escribe al menos dos caracteres.', true); return; }
   run(async () => {
     $('places').replaceChildren();
-    const query = new URLSearchParams({ name, count: '5', language: 'es', format: 'json' });
+    const query = new URLSearchParams({ name, count: '20', language: 'es', format: 'json' });
     const data = await requestJSON('https://geocoding-api.open-meteo.com/v1/search?' + query);
     const places = (Array.isArray(data.results) ? data.results : []).filter(p => typeof p.name === 'string' && Number.isFinite(p.latitude) && Number.isFinite(p.longitude));
-    if (!places.length) throw new Error('No encontramos esa ciudad. Prueba otro nombre o revisa la ortografía.');
+    if (!places.length) throw new Error('No encontramos ese lugar. Prueba el nombre de una ciudad o país y revisa la ortografía.');
     for (const place of places) {
       const button = document.createElement('button'); button.type = 'button';
-      button.textContent = [place.name, place.admin1, place.country].filter(Boolean).join(', ');
+      button.textContent = placeLabel(place);
       button.addEventListener('click', () => run(() => showWeather(place)));
       $('places').append(button);
     }
-    status('Selecciona la ciudad correcta entre los resultados.');
+    const country = exactCountry(places, name);
+    if (country) await showWeather(country);
+    else if (places.length === 1) await showWeather(places[0]);
+    else status('Encontramos varios lugares. Selecciona el país o la ciudad correcta.');
   });
 });
 async function showWeather(place) {
   const query = new URLSearchParams({ latitude: place.latitude, longitude: place.longitude, current: 'temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code', daily: 'temperature_2m_max,temperature_2m_min,weather_code', forecast_days: '4', timezone: 'auto' });
   const data = validateWeather(await requestJSON('https://api.open-meteo.com/v1/forecast?' + query));
   const c = data.current, d = data.daily;
-  $('location').textContent = [place.name, place.country].filter(Boolean).join(', ');
+  $('location').textContent = isCountry(place) ? place.name : [...new Set([place.name, place.country].filter(Boolean))].join(', ');
   $('temperature').textContent = Math.round(c.temperature_2m) + '°C';
   $('condition').textContent = describe(c.weather_code);
   $('updated').textContent = 'Hora local de los datos: ' + c.time.replace('T',' · ');
@@ -52,5 +56,8 @@ async function showWeather(place) {
     const label = document.createElement('p'); label.textContent = 'Máxima / mínima · °C';
     card.append(title,temp,desc,label); $('forecast').append(card);
   }
-  $('weather').hidden = false; status('Consulta completada. Puedes buscar otra ciudad.');
+  $('weather').hidden = false;
+  status(isCountry(place)
+    ? `Clima del punto de referencia de ${place.name} (${place.latitude.toFixed(2)}, ${place.longitude.toFixed(2)}). Varía dentro del país; busca una ciudad para consultar su clima local.`
+    : 'Consulta completada. Puedes buscar otra ciudad o país.');
 }

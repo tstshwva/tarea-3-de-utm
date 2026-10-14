@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {exactCountry, placeLabel} from '../dist/places.js';
+const country = {name:'Colombia',country:'Colombia',feature_code:'PCLI'};
+const town = {name:'Colombia',country:'Cuba',feature_code:'PPLA2'};
+test('distingue Colombia país de una localidad homónima',()=>assert.equal(exactCountry([town,country],' colombia '),country));
+test('reconoce países sin tildes',()=>assert.equal(exactCountry([{name:'México',feature_code:'PCLI'}],'mexico').name,'México'));
+test('no abre un país diferente al buscado',()=>assert.equal(exactCountry([country,town],'Perú'),undefined));
+test('etiqueta el país como punto de referencia',()=>assert.match(placeLabel(country),/País \(punto de referencia\)/));
+test('evita repetir ciudad y división administrativa',()=>assert.equal(placeLabel({name:'Bogotá',admin1:'Bogotá',country:'Colombia'}),'Bogotá, Colombia'));
