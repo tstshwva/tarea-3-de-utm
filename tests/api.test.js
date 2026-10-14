@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {requestJSON, validateWeather, describe} from '../dist/api.js';
+test('traduce el límite de peticiones',async()=>{await assert.rejects(requestJSON('test',async()=>({status:429,ok:false})),/Límite/)});
+test('traduce la falta de conexión',async()=>{await assert.rejects(requestJSON('test',async()=>{throw new TypeError('Failed to fetch')}),/conexión/)});
+test('rechaza respuestas vacías',async()=>{await assert.rejects(requestJSON('test',async()=>({ok:true,json:async()=>null})),/vacía/)});
+test('rechaza JSON inválido',async()=>{await assert.rejects(requestJSON('test',async()=>({ok:true,json:async()=>{throw new SyntaxError()}})),/inválida/)});
+test('traduce el tiempo de espera',async()=>{await assert.rejects(requestJSON('test',async()=>{const e=new Error();e.name='AbortError';throw e}),/demasiado/)});
+test('rechaza pronósticos incompletos',()=>assert.throws(()=>validateWeather({current:{temperature_2m:20},daily:{}}),/completos/));
+test('maneja códigos desconocidos',()=>assert.equal(describe(1000),'Condición no disponible'));
+test('reconoce tormenta intensa WMO 97',()=>assert.equal(describe(97),'Tormenta'));
