@@ -59,4 +59,10 @@ Las ocho pruebas verifican límite de peticiones, falta de conexión, respuesta 
 
 ## Publicación en GitHub
 
-No se ha configurado un repositorio de GitHub en esta carpeta. La publicación en Sites no sustituye ese entregable. Debe utilizarse el repositorio real del estudiante y su identidad Git. No se fabricó un historial de commits ni se cambiaron fechas para simular desarrollo previo. Para continuar, realiza cambios reales, revísalos y haz commits durante ese trabajo; no subas claves ni la carpeta `.git` de otro repositorio.
+Repositorio: https://github.com/tstshwva/tarea-3-de-utm
+
+Aplicación: https://tstshwva.github.io/tarea-3-de-utm/
+
+GitHub Pages publica la carpeta dist/ mediante .github/workflows/pages.yml después de ejecutar las pruebas. Cada cambio en main inicia una nueva publicación. Las rutas de los recursos son relativas para funcionar dentro del subdirectorio del repositorio.
+
+Los commits de esta sesión son cambios reales realizados con asistencia de IA y usando la identidad verificada de la cuenta. No acreditan un historial previo de desarrollo ni escritura manual del código por el estudiante.

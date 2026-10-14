@@ -7,7 +7,7 @@ Aplicación en `dist/`; README con ejecución y declaración de IA; bitácora en
 ## Evidencia que depende del estudiante
 
 1. Adjuntar la captura de GitHub Pro y el enlace de perfil que ya indicó haber preparado.
-2. Publicar el proyecto en su repositorio GitHub y entregar su enlace. Se necesita la URL real para integrarlo; Sites no reemplaza GitHub.
+2. Repositorio publicado: https://github.com/tstshwva/tarea-3-de-utm . Aplicación en GitHub Pages: https://tstshwva.github.io/tarea-3-de-utm/ .
 3. Registrar cinco prompts realmente usados, un error de IA detectado y la reflexión personal. El archivo de bitácora contiene el registro disponible y cinco prompts para continuar.
 4. Hacer cambios y commits reales durante el desarrollo restante. No presentar un historial fabricado como si acreditara trabajo previo.
 5. Realizar la demostración en clase con el guion, o grabar un video de máximo tres minutos.
